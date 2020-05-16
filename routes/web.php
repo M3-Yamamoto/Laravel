@@ -13,6 +13,7 @@
 
 // Route::get('/','RecepieController@index');
  Route::resource('recepie','RecepieController');
+ Route::get('home','HomeController@index');
 
 // Route::get('recepie','RecepieController@index');
 // Route::get('recepie/create','RecepieController@createRecepieForm');
@@ -22,5 +23,9 @@
 // Route::patch('recepie/{id}','RecepieController@update');
 // Route::delete('recepie/{id}','RecepieController@delete');
 
+
+
+
+Auth::routes();
 
 

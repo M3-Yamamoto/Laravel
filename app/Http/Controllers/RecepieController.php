@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Recepie;
+use App\Category;
 use Illuminate\Http\Request;
 
 class RecepieController extends Controller
-{
+{      
+
+    public function __construct()
+    {
+         $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +20,7 @@ class RecepieController extends Controller
      */
     public function index()
     {
-        $data = Recepie::all();
+        $data = Recepie::where('author_id', auth()->id())->get();
 
         return view('home',compact('data'));
     }
@@ -25,8 +31,10 @@ class RecepieController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-         return view('create');
+    {   
+
+        $category = Category::all();
+         return view('create',compact('category'));
     }
 
     /**
@@ -36,12 +44,12 @@ class RecepieController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store()
-    {           
-               
+    {                         
                 $validatedData = request()->validate([
                 'name' => 'required',
                 'ingredients' => 'required',
-                'category' => 'required'
+                'category' => 'required',
+                // 'author_id' =>
     ]);
 
          // $recepie = new Recepie();
@@ -52,7 +60,7 @@ class RecepieController extends Controller
 
          // $recepie->save();
 
-        Recepie::create($validatedData);
+        Recepie::create($validatedData + ['author_id' =>auth()->id()]);
 
          return redirect("recepie");
     }
@@ -66,6 +74,7 @@ class RecepieController extends Controller
     public function show(Recepie $recepie)
     {
 
+        $this->authorize('view',$recepie);
         return view('show',compact('recepie'));
     }
 
@@ -76,9 +85,11 @@ class RecepieController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Recepie $recepie)
-    {
+    {   
+        $this->authorize('view',$recepie);
+        $category = Category::all();
 
-        return view('edit',compact('recepie'));
+        return view('edit',compact('recepie','category'));
     }
 
     /**
@@ -90,7 +101,7 @@ class RecepieController extends Controller
      */
     public function update(Request $request, Recepie $recepie)
     {
-
+            $this->authorize('view',$recepie);
             $validatedData = request()->validate([
             'name' => 'required',
             'ingredients' => 'required',
@@ -118,6 +129,7 @@ class RecepieController extends Controller
      */
     public function destroy(Recepie $recepie)
     {
+        $this->authorize('view',$recepie);
         $recepie-> delete();
         return redirect("recepie");
     }
