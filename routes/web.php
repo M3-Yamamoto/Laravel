@@ -1,5 +1,6 @@
  <?php
 
+use App\Recepie;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,9 +12,16 @@
 |
 */
 
-// Route::get('/','RecepieController@index');
- Route::resource('recepie','RecepieController');
- Route::get('home','HomeController@index');
+// app()->bind('test',function(){
+// 	return new \App\test("some important key!");
+// });
+
+Route::get('/',function(){
+	dd(app('test'));
+});
+
+Route::resource('recepie','RecepieController');
+Route::get('home','HomeController@index');
 
 // Route::get('recepie','RecepieController@index');
 // Route::get('recepie/create','RecepieController@createRecepieForm');

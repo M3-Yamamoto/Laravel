@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Recepie;
 use App\Category;
+use App\test;
 use Illuminate\Http\Request;
 
 class RecepieController extends Controller
@@ -19,7 +20,7 @@ class RecepieController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
         $data = Recepie::where('author_id', auth()->id())->get();
 
         return view('home',compact('data'));
@@ -61,8 +62,9 @@ class RecepieController extends Controller
          // $recepie->save();
 
         Recepie::create($validatedData + ['author_id' =>auth()->id()]);
+        session()->flash("message",'Recipe has created successfully!');
 
-         return redirect("recepie");
+        return redirect("recepie")->with("message",' Recipe has created successfully!');
     }
 
     /**
@@ -71,9 +73,8 @@ class RecepieController extends Controller
      * @param  \App\Recepie  $recepie
      * @return \Illuminate\Http\Response
      */
-    public function show(Recepie $recepie)
-    {
-
+    public function show(Recepie $recepie,test $test)
+    { 
         $this->authorize('view',$recepie);
         return view('show',compact('recepie'));
     }
